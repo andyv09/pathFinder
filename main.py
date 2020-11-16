@@ -2,7 +2,7 @@ from queue import PriorityQueue
 import pygame, time
 
 size = (width, height) = 960, 960
-GRID_SIZE = 64
+GRID_SIZE = 32
 w = width//GRID_SIZE
 h = height//GRID_SIZE
 grid = []
@@ -29,7 +29,7 @@ class Node:
             pygame.draw.rect(win, (255, 200, 200), (self.x * w, self.y * h, w - 1, h - 1))
             pygame.draw.circle(win, (99,99,99), (self.x * w + w // 2, self.y * h + h // 2), w // 3)
         elif self.wall == True:
-            pygame.draw.rect(win, (0, 255, 200), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.rect(win, (0, 55, 250), (self.x * w, self.y * h, w - 1, h - 1))
         elif self.visited == True:
             pygame.draw.rect(win, (46, 47, 48), (self.x * w, self.y * h, w - 1, h - 1))
         else:
@@ -104,6 +104,36 @@ def clear():
             grid[i][j].add_neighbors(grid)
     start = None
     end = None
+
+def reset():
+    global queue, visited, stack, path, count, open_set_hash, open_set, pathFound, end, start
+    queue = []
+    visited = []
+    stack = []
+    path = []
+    count = 0
+    open_set = PriorityQueue()
+    open_set_hash = []
+    pathFound = False
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            grid[i][j].prev = None
+            grid[i][j].visited = False
+            grid[i][j].f = float('inf')
+            grid[i][j].g = float('inf')
+            grid[i][j].h = float('inf')
+    start.visited = True
+
+    end.prev = None
+    start.prev = None
+    start.visited = True
+    start.f = dist(start.get_pos(), end.get_pos())
+    start.g = 0
+    start.h = 0
+    stack.append(start)
+    # ASTAR
+    open_set.put((0, 0, start))
+    open_set_hash.append(start)
 
 def DFS():
     global pathFound
@@ -240,6 +270,7 @@ def main():
                 #H DFS
                 if event.key == 104:
                     startAlgorithm = True
+                    algorithm = 0
                 #J BFS
                 if event.key == 106:
                     startAlgorithm = True
@@ -254,6 +285,10 @@ def main():
                     algorithm = 3
                 if event.key == 99:
                     clear()
+                    startAlgorithm = False
+                if event.key == 118:
+                    reset()
+                    startAlgorithm = False
 
         if startAlgorithm:
             if start == None or end == None:
