@@ -18,3 +18,5 @@ Supports <b>DFS</b>, <b>DFS</b>, <b>A*</b> and <b>Dijkstra</b>
   L - Start Dijkstra
   
   C - Reset grid
+  
+  R - Reset and keep walls
