@@ -2,6 +2,7 @@ Pathfinder visualizer in Python
 
 Supports <b>DFS</b>, <b>DFS</b>, <b>A*</b> and <b>Dijkstra</b>
 
+![Demo Image](https://github.com/andrazvrecko/pathFinder/blob/master/demoImg.png)
 
 <b>Use:</b>
 
