@@ -17,21 +17,30 @@ class Node:
         self.f = float('inf')
         self.g = float('inf')
         self.h = float('inf')
-
+        self.growthDuration = 25
+        self.pathSizeH = (h-1) * (1/self.growthDuration)
+        self.pathSizeW = (w-1) * (1/self.growthDuration)
     def draw(self, win, val=0):
         if val == 1:
-            pygame.draw.rect(win, (0, 255, 0), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.rect(win, (255, 200, 200), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.circle(win, (0, 255, 0), (self.x * w + w // 2, self.y * h + h // 2), w // 3)
         elif val == 2:
-            pygame.draw.rect(win, (255, 0, 0), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.rect(win, (255, 200, 200), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.circle(win, (255, 0, 0), (self.x * w + w // 2, self.y * h + h // 2), w // 3)
         elif val == 3:
-            pygame.draw.rect(win, (222, 177, 38), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.rect(win, (222, 177, 38), (self.x * w + (w - 1 - self.pathSizeW)/2, self.y * h + (h - 1 - self.pathSizeH)/2, self.pathSizeW, self.pathSizeH))
+            if self.pathSizeH < (h-1):
+                self.pathSizeH += (h-1)*(1/self.growthDuration)
+            if self.pathSizeW < (w-1):
+                self.pathSizeW += (w-1)*(1/self.growthDuration)
+
         elif val == 4:
             pygame.draw.rect(win, (255, 200, 200), (self.x * w, self.y * h, w - 1, h - 1))
-            pygame.draw.circle(win, (99,99,99), (self.x * w + w // 2, self.y * h + h // 2), w // 3)
+            pygame.draw.circle(win, (0,255,255), (self.x * w + w // 2, self.y * h + h // 2), w // 3)
         elif self.wall == True:
             pygame.draw.rect(win, (0, 55, 250), (self.x * w, self.y * h, w - 1, h - 1))
         elif self.visited == True:
-            pygame.draw.rect(win, (46, 47, 48), (self.x * w, self.y * h, w - 1, h - 1))
+            pygame.draw.rect(win, (0, 204, 204), (self.x * w, self.y * h, w - 1, h - 1))
         else:
             pygame.draw.rect(win, (255, 200, 200), (self.x * w, self.y * h, w - 1, h - 1))
     def get_pos(self):
@@ -65,13 +74,14 @@ queue = []
 visited = []
 stack = []
 path = []
+drawPath = []
 #ASTAR
 count = 0
 open_set = PriorityQueue()
 open_set_hash = []
 
 win = pygame.display.set_mode(size)
-pygame.display.set_caption("Test")
+pygame.display.set_caption("Pathfinding Visualizer")
 
 
 def clickBox(pos):
@@ -82,7 +92,8 @@ def clickBox(pos):
 pathFound = False
 
 def clear():
-    global queue, visited, stack, path, count, open_set_hash, open_set, start, end, pathFound
+    global queue, visited, stack, path, count, open_set_hash, open_set, start, end, pathFound, drawPath
+    drawPath = []
     queue = []
     visited = []
     stack = []
@@ -106,7 +117,8 @@ def clear():
     end = None
 
 def reset():
-    global queue, visited, stack, path, count, open_set_hash, open_set, pathFound, end, start
+    global queue, visited, stack, path, count, open_set_hash, open_set, pathFound, end, start, drawPath
+    drawPath = []
     queue = []
     visited = []
     stack = []
@@ -301,6 +313,8 @@ def main():
                 ASTAR()
             elif algorithm == 3:
                 DIJKSTRA()
+        if len(path) > 0 and (len(stack) == 0 or len(open_set_hash) == 0):
+            drawPath.append(path.pop(len(path)-1))
 
         win.fill((0, 20, 20))
         for i in range(GRID_SIZE):
@@ -311,10 +325,14 @@ def main():
                     node.draw(win, val=1)
                 if node == end:
                     node.draw(win, val=2)
-                if node in path and node != start:
-                    node.draw(win, val=3)
+                if node != start:
+                    if node in drawPath:
+                        node.draw(win, val=3)
+                    if node in stack or node in open_set_hash:
+                        node.draw(win, val=4)
         pygame.display.flip()
         if algorithm != 1 or algorithm != 3:
             time.sleep(.01)
-
+        if len(drawPath) > 0:
+            time.sleep(.01)
 main()
