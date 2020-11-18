@@ -6,6 +6,12 @@ Supports <b>DFS</b>, <b>DFS</b>, <b>A*</b> and <b>Dijkstra</b>
 
 <b>Use:</b>
 
+  ```
+  #Will create 50x50 Grid in a 1000x1000 window
+  program = Program(GRID_SIZE=50, WIDTH=1000, HEIGHT=1000)
+  program.startProgram()
+  ```
+
   Right click - select start and end
   
   Left click - create walls
