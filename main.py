@@ -38,7 +38,7 @@ class Node:
             pygame.draw.circle(win, (0,255,255), (self.x * self.wl + self.wl // 2, self.y * self.hl + self.hl // 2), self.wl // 3)
         elif self.wall == True:
             pygame.draw.rect(win, (255, 200, 200), (self.x * self.wl, self.y * self.hl, self.wl - 1, self.hl - 1))
-            pygame.draw.rect(win, (0, 55, 250), (self.x * self.wl + (self.wl - 1 - self.pathSizeW)/2, self.y * self.hl + (self.hl - 1 - self.pathSizeH)/2, self.pathSizeW, self.pathSizeH))
+            pygame.draw.rect(win, (70, 78, 81), (self.x * self.wl + (self.wl - 1 - self.pathSizeW)/2, self.y * self.hl + (self.hl - 1 - self.pathSizeH)/2, self.pathSizeW, self.pathSizeH))
             if self.pathSizeH < (self.hl-1):
                 self.pathSizeH += (self.hl-1)*(1/self.growthDuration)
             if self.pathSizeW < (self.wl-1):
@@ -61,11 +61,11 @@ class Node:
 
 
 class Program:
-    def __init__(self):
+    def __init__(self, GRID_SIZE=33, WIDTH=990, HEIGHT=990):
         self.algorithm = 0
         self.startAlgorithm = False
-        self.size = (self.width, self.height) = 990, 990
-        self.GRID_SIZE = 33
+        self.size = (self.width, self.height) = WIDTH, HEIGHT
+        self.GRID_SIZE = GRID_SIZE
         self.GRAPH_SIZE = (self.GRID_SIZE - 1) / 2
         self.w = self.width // self.GRID_SIZE
         self.h = self.height // self.GRID_SIZE
@@ -411,5 +411,5 @@ class Program:
 
 
 
-program = Program()
+program = Program(GRID_SIZE=50, WIDTH=1000, HEIGHT=1000)
 program.startProgram()
