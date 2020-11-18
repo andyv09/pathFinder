@@ -21,3 +21,5 @@ Supports <b>DFS</b>, <b>DFS</b>, <b>A*</b> and <b>Dijkstra</b>
   C - Reset grid
   
   V - Reset and keep walls
+  
+  A - Generate Maze using Prims Algorithm
